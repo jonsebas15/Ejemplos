@@ -1,0 +1,20 @@
+<ion-tabs (ionTabsDidChange)="seleccionado($event)">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="chats">
+      <ion-icon [name]="seleccionar() == 'chats' ? 'chatbubbles' : 'chatbubbles-outline'"></ion-icon>
+      Chats
+    </ion-tab-button>
+    <ion-tab-button tab="grupos">
+      <ion-icon [name]="seleccionar() == 'grupos' ? 'people':'people-outline'"></ion-icon>
+      Grupos
+    </ion-tab-button>
+    <ion-tab-button tab="publicaciones">
+      <ion-icon [name]="seleccionar() =='publicaciones' ? 'chatbox' : 'chatbox-outline'"></ion-icon>
+      Publicaciones
+    </ion-tab-button>
+    <ion-tab-button tab="ajustes">
+      <ion-icon [name]="seleccionar() == 'ajustes' ? 'settings':'settings-outline'"></ion-icon>
+      Ajustes
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

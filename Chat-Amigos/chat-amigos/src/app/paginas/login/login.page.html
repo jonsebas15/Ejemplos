@@ -1,0 +1,37 @@
+<ion-content [fullscreen]="true">
+  <ion-list class="ion-margin">
+  <form [formGroup]="form">
+      <ion-input placeholder="Correo" type="email" formControlName="email" errorText="Correo invalido">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+      </ion-input>
+
+      <ion-input placeholder="contraseña" type="password" formControlName="password" [errorText]="form.get('password')?.hasError('minlength') ? 'la contraseña debe ser mayor a 4 caracteres' : 'Ingresa tu contraseña'">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input-password-toggle slot="end" ></ion-input-password-toggle>
+      </ion-input>
+      <div align="right">
+        <ion-button fill="clear" size="small" color="medium" > <p>¿olvidaste la contraseña?</p></ion-button>
+      </div>
+      <div>
+      @if(!isLogin()){
+        <ion-button size="large" expand="block" class="ion-margin-top class= ion-no-padding-top" [strong]="true">
+          <ion-text color="#fff">Ingresar</ion-text>
+        </ion-button>
+      } @else {
+        <ion-button size="large" expand="block" class="ion-margin-top class= ion-no-padding-top" [strong]="true">
+          <ion-spinner name="crescent"></ion-spinner>
+        </ion-button>
+      }
+      </div>
+    </form>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div align="center">
+      <ion-text>¿No tienes una cuenta?</ion-text>
+      <ion-button fill="clear" size="small" [strong]="true" routerLink="signup">Registrarse</ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

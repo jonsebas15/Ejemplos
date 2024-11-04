@@ -1,0 +1,7 @@
+{
+  "name": "chat-amigos",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
