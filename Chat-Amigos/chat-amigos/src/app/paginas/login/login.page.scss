@@ -1,4 +1,14 @@
 ion-list{
+    div.logo{
+
+        ion-title{
+            font-size: 2rem;
+            justify-self: center;
+            padding-bottom: 2vh;
+            font-weight: bold;
+        }
+
+    }
     transform: translateY(50%);
     ion-input{
         font-size: 1.2rem;

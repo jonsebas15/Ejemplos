@@ -1,13 +1,47 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>signup</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">signup</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-list class="ion-margin">
+    <div class="logo">
+      <ion-title color="primary">Chat seds</ion-title>
+      <p>REGISTRARSE</p>
+    </div>
+  <form [formGroup]="form">
+      <ion-input placeholder="Correo" type="email" formControlName="email" errorText="Correo invalido">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+      </ion-input>
+
+      <ion-input placeholder="Contraseña nueva" type="password" formControlName="password" [errorText]="form.get('password')?.hasError('minlength') ? 'la contraseña debe ser mayor a 4 caracteres' : 'Ingresa la contraseña'">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input-password-toggle slot="end" ></ion-input-password-toggle>
+      </ion-input>
+
+      <ion-input placeholder="Nombre" type="text" formControlName="name" errorText="* Escribe su nombre">
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+      </ion-input>
+      <div>
+      @if(!isSingup()){
+        <ion-button size="large" expand="block" class="ion-margin-top class= ion-no-padding-top" [strong]="true" (click) = "onSubmit()">
+          <ion-text color="#fff">Registrarse</ion-text>
+        </ion-button>
+      } @else {
+        <ion-button size="large" expand="block" class="ion-margin-top class= ion-no-padding-top" [strong]="true">
+          <ion-spinner name="crescent"></ion-spinner>
+        </ion-button>
+      }
+      </div>
+    </form>
+  </ion-list>
+  <ion-alert 
+  [isOpen]="!!errorMessage()"
+  (didDismiss) ="setErrorMessage(null)"
+  header="Alert" [message]="errorMessage()" buttons="['OK']"></ion-alert>
 </ion-content>
+
+
