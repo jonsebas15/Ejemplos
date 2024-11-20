@@ -5,8 +5,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonIcon, IonButto
 import { lockClosedOutline, mailOutline, personOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { Router } from '@angular/router';
-
+// import { Router } from '@angular/router';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
@@ -17,7 +16,7 @@ import { Router } from '@angular/router';
 export class SignupPage implements OnInit {
 
   private auth = inject(AuthService)
-  private router = inject(Router)
+  //private router = inject(Router)
   errorMessage = signal<string | null>(null);
 
   form!: FormGroup;
@@ -48,7 +47,8 @@ export class SignupPage implements OnInit {
       this.setIsSignup(false)
 
       // navigate to tabs screen 
-      this.router.navigateByUrl('/principal',{ replaceUrl:true })
+      //this.router.navigateByUrl('/principal',{ replaceUrl:true })
+      this.auth.navigateByUrl('/principal')
       
       this.form.reset();
     } catch (e: any) {

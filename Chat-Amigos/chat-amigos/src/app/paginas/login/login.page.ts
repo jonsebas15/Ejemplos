@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { sendPasswordResetEmail } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginPage implements OnInit {
   isFpModal = signal<boolean>(false)
   errorMessage = signal<string | null>(null);
   private auth = inject(AuthService);
-  private router = inject(Router)
+  //private router = inject(Router)
 
   constructor() { 
     addIcons({mailOutline,lockClosedOutline});
@@ -51,7 +52,8 @@ export class LoginPage implements OnInit {
       this.setIsLogin(false)
 
       // navigate to tabs screen 
-      this.router.navigateByUrl('/principal',{ replaceUrl:true })
+      //this.router.navigateByUrl('/principal',{ replaceUrl:true })
+      this.auth.navigateByUrl('/principal')
       
       this.form.reset();
     } catch (e: any) {
@@ -93,9 +95,14 @@ export class LoginPage implements OnInit {
   }
   async resetPassword(email:string){
     try {
-        this.auth.resetPassword(email)
+      this.setIsForgot(true)
+      await this.auth.resetPassword(email);
+      this.setIsForgot(false);
+
+      this.setErrorMessage('reset password ñonl sent yo your emaiil id succesfully')
     } catch (error) {
-      
+      this.setIsForgot(false)
+      console.log(error);
     }
   }
 }

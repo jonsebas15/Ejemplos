@@ -1,6 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Chats</ion-title>
+      <ion-button size="large" id="users-list" slot="end" color="tertiary">
+        <ion-icon slot="icon-only" name="add-circle" color="primary"></ion-icon>
+      </ion-button>
+
+
   </ion-toolbar>
 </ion-header>
 
@@ -27,4 +32,12 @@
     </ion-item>
     }
   </ion-list>
+
+  <ion-modal trigger="users-list">
+    <ng-template>
+      <app-users>
+
+      </app-users>
+    </ng-template>
+  </ion-modal>
 </ion-content>
