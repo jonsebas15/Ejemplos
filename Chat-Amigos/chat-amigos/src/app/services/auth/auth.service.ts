@@ -13,14 +13,14 @@ export class AuthService {
   private router = inject(Router)
   private api = inject(ApiService)
   constructor() { }
-  /* setData(uid:string | null){
+  setData(uid:string | null){
     if(!this.uid())
       this.uid.set(uid)
-  } */
+  }
   getId(){
     const auth = getAuth();
     const uid = auth.currentUser?.uid || null;
-    //this.setData(uid);
+    this.setData(uid);
     return uid;
   }
 
@@ -41,7 +41,7 @@ export class AuthService {
       }
       //set data in database
       await this.api.setData(`users/${id}`, userData);
-      //this.setData(id);
+      this.setData(id);
 
       return {id}
     } catch(e){
@@ -59,7 +59,7 @@ export class AuthService {
       const response = await signInWithEmailAndPassword(this.fireAuth, email, password) ;
       if(response?.user){
         //guardar dato
-        //this.setData(response?.user?.uid);
+        this.setData(response?.user?.uid);
       }
     } catch(e){
       console.log(e)
@@ -109,7 +109,7 @@ export class AuthService {
       
       await this.fireAuth.signOut()
 
-      //this.uid.set(null)
+      this.uid.set(null)
       this.navigateByUrl('/login');
       return true
     } catch (error) {
