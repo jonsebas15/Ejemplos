@@ -15,10 +15,10 @@
       @for(user of users(); track $index){
         <ion-item color="tertiary" (click)="startChat(user)">
           <ion-avatar slot="start">
-            <ion-img [src]="'https://i.pravatar.cc/314'" />
+            <ion-img [src]="user?.photo" />
           </ion-avatar>
           <ion-label>
-            Usuario promedio
+            {{ user?.name }}
           </ion-label>
         </ion-item>
       }

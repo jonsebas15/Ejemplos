@@ -17,23 +17,36 @@
       <ion-title size="large">Chats</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-list>
+  @let chatroomsArray = chatrooms();
+  @if(chatroomsArray && chatroomsArray?.length! > 0){
 
-    @for(chat of chats; track $index){
+    <ion-list>
+  
+      @for(chatroom of chatroomsArray; track $index){
+  
+      <ion-item [detail]="true" (click)="getChat(chatroom)">
+        <ion-avatar slot="start">
+          <ion-img [src]="chatroom?.photo" />
+        </ion-avatar>
+        <ion-label>
+          {{  chatroom?.name }}
+          @if(chatroom?.lastMessage){
+  
+            <p>
+              {{ chatroom?.lastMessage }}
+            </p>
+          }
+        </ion-label>
+      </ion-item>
+      } <!-- @empty {
+      } -->
+    </ion-list>
+  
+  }@else {
+    <app-empty-screen [model]="model"></app-empty-screen>
+  }
 
-    <ion-item [detail]="true">
-      <ion-avatar slot="start">
-        <ion-img [src]="'https://i.pravatar.cc/314'" />
-      </ion-avatar>
-      <ion-label>
-        Usuario promedio
-        <p>
-          ultimo mensaje
-        </p>
-      </ion-label>
-    </ion-item>
-    }
-  </ion-list>
+
 
   <ion-modal #usersModal [isOpen]="isNewChat()" (didDismiss)="setIsNewChat(false)">
     <ng-template>

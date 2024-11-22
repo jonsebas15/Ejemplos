@@ -37,7 +37,7 @@ export class AuthService {
         name:data.name,
         email: data.email,
         uid:id,
-        photo:'https://i.pravatar.cc'+this.randomIntFromInterval(200,400),
+        photo:'https://i.pravatar.cc/'+this.randomIntFromInterval(200,400),
       }
       //set data in database
       await this.api.setData(`users/${id}`, userData);

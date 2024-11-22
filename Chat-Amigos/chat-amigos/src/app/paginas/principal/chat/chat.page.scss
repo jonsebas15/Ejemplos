@@ -1,0 +1,17 @@
+ion-footer{
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.8);
+    padding: 0;
+    ion-button{
+        --border-radius: 15px;
+    }
+    ion-textarea{
+        border: 1px solid var(--ion-color-medium);
+        border-radius:  16px;
+        margin: 0.5vh 0.5vh 0.5vh 0;
+        padding-left: 0.5vh;
+        font-size: 18px;
+        max-height: 180px;
+        
+        overflow-y: auto;
+        }
+}
