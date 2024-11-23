@@ -1,5 +1,5 @@
 ion-footer{
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.8);
+    box-shadow: 0px -3px 20px 4px rgba(0, 0, 0, 0.2);
     padding: 0;
     ion-button{
         --border-radius: 15px;
@@ -8,10 +8,20 @@ ion-footer{
         border: 1px solid var(--ion-color-medium);
         border-radius:  16px;
         margin: 0.5vh 0.5vh 0.5vh 0;
-        padding-left: 0.5vh;
+        padding-left: 1vh;
+        padding-bottom: 0.6vh;
         font-size: 18px;
         max-height: 180px;
-        
+        align-content: center;
         overflow-y: auto;
         }
+}
+ion-header{
+    ion-toolbar{
+        ion-icon{
+            position: relative;
+            right: 8px;
+            width: 1.7rem;
+        }
+    }
 }

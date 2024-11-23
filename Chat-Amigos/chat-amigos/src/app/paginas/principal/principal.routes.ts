@@ -37,5 +37,10 @@ export const routes: Routes = [
     path: 'chats/:id',
     loadComponent: () => import('./chat/chat.page').then( m => m.ChatPage)
   },
+  {
+    path: 'grupos/:id',
+    loadComponent: () => import('./grupos/chatMundo/chat-mundo/chat-mundo.page').then( m => m.ChatMundoPage)
+  },
+
 
 ]

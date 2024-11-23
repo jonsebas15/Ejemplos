@@ -1,9 +1,8 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { ApiService } from '../api/api.service';
-import { onValue, query } from '@firebase/database';
+import { DatabaseReference, off, onValue, query } from '@firebase/database';
 import { AuthService } from '../auth/auth.service';
 import { User } from 'src/app/interface/user';
-import { object } from '@angular/fire/database';
 import { ChatRoom } from 'src/app/interface/chat-room';
 
 @Injectable({
@@ -14,6 +13,11 @@ export class ChatRoomService {
   users = signal<User[] | null>([])
   chatrooms = signal<ChatRoom[] | null>([])
 
+  private usersRef:DatabaseReference | null = null;
+  private chatroomsRef: DatabaseReference | null = null; 
+  private chatRoomsListener: any = null;
+  private usersListener: any = null;
+
   private api= inject(ApiService)
   private auth = inject(AuthService)
   currentUserId = computed(()=> this.auth.uid())
@@ -22,10 +26,10 @@ export class ChatRoomService {
     this.getChatRooms();
   }
   getUsers(){
-    const usersRef = this.api.getRef('users');
+    this.usersRef = this.api.getRef('users');
 
     //lista de los usuarios 
-    onValue(usersRef,(snapshot)=>{
+    this.usersListener = onValue(this.usersRef,(snapshot)=>{
       if(snapshot?.exists()){
         const users = snapshot.val();
 
@@ -44,50 +48,56 @@ export class ChatRoomService {
   }
 
   async createChatRoom(userIds: string[], roomName:string, type: string = 'private'):Promise<any>{
-    const chatRoomRef = this.api.getRef('chatrooms')
-    const usersList = [this.currentUserId(), ...userIds];
 
-    const sortedUserList = usersList.sort();
-    const usersHash = sortedUserList.join(',');
-
-    const existingChatRoomQuery = query(
-      chatRoomRef,
-      this.api.orderByChild('usersHash'), // consultas por usersHash
-      this.api.equealTo(usersHash)
-    );
-
-    const existingChatRoomSnapshot = await this.api.getData(existingChatRoomQuery);
-    if(existingChatRoomSnapshot?.exists()){
-
-      const chatRooms = existingChatRoomSnapshot.val();
-
-      //check for private chat room
-      const privateChatRoom = Object.values(chatRooms).find((chatRoom:any)=> chatRoom.type === 'private')
-
-      if(privateChatRoom){
-        return privateChatRoom
+    try {
+      const chatRoomRef = this.api.getRef('chatrooms')
+      const usersList = [this.currentUserId(), ...userIds];
+  
+      const sortedUserList = usersList.sort();
+      const usersHash = sortedUserList.join(',');
+  
+      const existingChatRoomQuery = query(
+        chatRoomRef,
+        this.api.orderByChild('usersHash'), // consultas por usersHash
+        this.api.equealTo(usersHash)
+      );
+  
+      const existingChatRoomSnapshot = await this.api.getData(existingChatRoomQuery);
+      if(existingChatRoomSnapshot?.exists()){
+  
+        const chatRooms = existingChatRoomSnapshot.val();
+  
+        //check for private chat room
+        const privateChatRoom = Object.values(chatRooms).find((chatRoom:any)=> chatRoom.type === 'private')
+  
+        if(privateChatRoom){
+          return privateChatRoom
+        }
       }
+      //if no matching private chat room eist, create a new one
+      const newChatRoom = this.api.pushData(chatRoomRef)
+      const chatRoomId = newChatRoom.key;
+      const chatRoomData = {
+        id: chatRoomId,
+        users: sortedUserList,
+        usersHash,
+        name: roomName,
+        type,
+        createAt: new Date().toISOString(),
+      };
+      await this.api.setRefData(newChatRoom, chatRoomData)
+      return chatRoomData
+    } catch (error) {
+      throw(error)
     }
-    //if no matching private chat room eist, create a new one
-    const newChatRoom = this.api.pushData(chatRoomRef)
-    const chatRoomId = newChatRoom.key;
-    const chatRoomData = {
-      id: chatRoomId,
-      users: sortedUserList,
-      usersHash,
-      name: roomName,
-      type,
-      createAt: new Date().toISOString(),
-    };
-    await this.api.setRefData(newChatRoom, chatRoomData)
-    return chatRoomData
+
   }
   getChatRooms(){
-    const chatroomsRef = this.api.getRef('chatrooms');
+    this.chatroomsRef = this.api.getRef('chatrooms');
 
     //listen for realtime chats
-    onValue(
-      chatroomsRef,
+    this.chatRoomsListener = onValue(
+      this.chatroomsRef,
       (snapshot)=>{
         if(snapshot?.exists()){
           const chatrooms = snapshot.val();
@@ -96,6 +106,7 @@ export class ChatRoomService {
 
           const chatroomData = chatroomkeys.map((roomId)=>{
             const room = chatrooms[roomId];
+            
 
             // check if current user is part of the chatroom
             if(room.type == 'private' && room.users.includes(this.currentUserId())){  
@@ -119,6 +130,7 @@ export class ChatRoomService {
 
           //execute all promises and filter our not 
           Promise.all(chatroomData).then((chatroomswithDetails)=>{
+
             const validChatrooms = chatroomswithDetails.filter((room)=> room !== null);
             this.chatrooms.set(validChatrooms as ChatRoom[]);
           })
@@ -140,6 +152,7 @@ export class ChatRoomService {
     messages: any
   ){
     try {
+
       //fetch other user datails
       const userRef = this.api.getRef(`users/${otherUserId}`);
       const snapshot = await this.api.getData(userRef);
@@ -150,7 +163,8 @@ export class ChatRoomService {
       let lastMessage: any = null
       if(messages){
         const messageArray = Object.values(messages);
-        const sorteMessages = messageArray.sort((a:any, b:any)=>b.timestamp - a.timestap);
+        const sorteMessages = messageArray.sort((a:any, b:any)=>{
+          return b.timestamp - a.timestamp});
 
         lastMessage = sorteMessages[0]
       }
@@ -173,4 +187,22 @@ export class ChatRoomService {
     }
 
   }
+  /* unsubscribeChatrooms(){
+    if(this.chatroomsRef){
+      off(this.chatRoomsListener, 'value', this.chatRoomsListener)
+      this.chatroomsRef = null; //reset the reference
+      this.chatRoomsListener = null;
+    }
+  }
+  unsubscribeUsers(){
+    if(this.usersRef){
+      off(this.usersRef, 'value', this.usersListener)
+      this.usersRef = null; //reset the reference
+      this.usersListener = null;
+    }
+  }
+  unsubscribeUsersAndChatrooms(){
+    this.unsubscribeChatrooms();
+    this.unsubscribeUsers();
+  } */
 }

@@ -76,4 +76,11 @@ export class ChatsPage implements OnInit {
     }
     this.router.navigate(['/', 'principal','chats', id], navData)
   }
+
+  /* ngOnDestroy(){
+    this.chatroom.unsubscribeUsersAndChatrooms();
+  } */
+  llamando(llamar:any){
+    console.log(llamar)
+  }
 }

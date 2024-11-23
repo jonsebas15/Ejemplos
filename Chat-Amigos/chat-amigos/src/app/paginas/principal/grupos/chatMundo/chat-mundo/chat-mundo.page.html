@@ -1,48 +1,44 @@
 <ion-header >
   <ion-toolbar>
-    <ion-title>{{ name() }}</ion-title>
+    <ion-title>Chat Mundo</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/principal/chats" color="medium"></ion-back-button>
+      <ion-back-button defaultHref="/principal/grupos" color="medium"></ion-back-button>
     </ion-buttons>
     <!-- <ion-buttons slot="end">
       <ion-button (click)="clearMessages()">Borrar mensajes</ion-button>
     </ion-buttons> -->
-    <ion-icon
+    <!-- <ion-icon
     name="ellipsis-vertical"
     slot="end"
     (click)="openMenu($event)"
     size="large"
-  ></ion-icon>
+  ></ion-icon> -->
 
-  <ion-popover [isOpen]="isMenuOpen" [event]="event" (ionPopoverDidDismiss)="closeMenu()">
+ <!--  <ion-popover [isOpen]="isMenuOpen" [event]="event" (ionPopoverDidDismiss)="closeMenu()">
     <ng-template>
       <ion-list>
         <ion-item button (click)="clearFriend()">Eliminar amigo</ion-item>
         <ion-item button (click)="clearMessages()">Borrar mensajes</ion-item>
       </ion-list>
     </ng-template>
-  </ion-popover>
-
-
-
+  </ion-popover> -->
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
   @let chatsArray = chats();
   @if(chatsArray && chatsArray?.length! >0){
 
     <ion-list>
       @for(chat of chatsArray; track $index){
   
-        <app-chat-box [chat]="chat"> </app-chat-box>
+        <app-chat-box-mundo [chat]="chat"> </app-chat-box-mundo>
       }
     </ion-list>
-  }@else {
+  }<!-- @else {
     <app-empty-screen [model]="model"></app-empty-screen>
-  }
+  } -->
 </ion-content>
 <ion-footer>
   <ion-toolbar>

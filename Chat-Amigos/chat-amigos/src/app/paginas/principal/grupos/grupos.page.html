@@ -1,13 +1,27 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>grupos</ion-title>
+    <ion-title>Chats grupal</ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">grupos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+    <ion-list> 
+      <ion-item [detail]="true" (click)="getChat()">
+        <ion-avatar slot="start">
+          <ion-img [src]="'https://w7.pngwing.com/pngs/824/235/png-transparent-world-globe-free-content-environmental-s-globe-world-sphere.png'" />
+        </ion-avatar> 
+        <ion-label>
+          Chat Mundo
+          <!-- @if(chatroom?.lastMessage){
+            <p>
+              {{ chatroom?.lastMessage }}
+            </p>
+          } -->
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+
 </ion-content>
